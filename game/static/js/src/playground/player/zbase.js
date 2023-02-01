@@ -63,7 +63,7 @@ class Player extends GameObject {
     add_listening_events() {
         let outer = this;
         this.playground.game_map.$canvas.on("contextmenu", function() {
-            return false;
+            return true;
         });
         this.playground.game_map.$canvas.mousedown(function(e) {
 			if (outer.playground.state !== "fighting")
@@ -105,8 +105,19 @@ class Player extends GameObject {
             }
         });
 
-        $(window).keydown(function(e) {
-             if (outer.playground.state !== "fighting")
+		this.playground.game_map.$canvas.keydown(function(e) {
+            if (e.which === 13) {  // enter
+                if (outer.playground.mode === "multi mode") {  // 打开聊天框
+                    outer.playground.chat_field.show_input();
+                    return false;
+                }
+            } else if (e.which === 27) {  // esc
+                if (outer.playground.mode === "multi mode") {  // 关闭聊天框
+                    outer.playground.chat_field.hide_input();
+                }
+            }
+
+            if (outer.playground.state !== "fighting")
                 return true;
 
             if (e.which === 81) {  // q
